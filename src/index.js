@@ -2,18 +2,41 @@ import { state, show, remove, clear } from './core.js';
 import Renderer from './render/renderer.js';
 
 /**
- * @typedef {import('../types/notify').NotifyAPI} NotifyAPI
- * @typedef {import('../types/notify').NotifyAppearance} NotifyAppearance
- * @typedef {import('../types/notify').NotifyType} NotifyType
- * @typedef {import('../types/notify').NotifyShowOptions} NotifyShowOptions
- * @typedef {import('../types/notify').NotifyPromiseOptions} NotifyPromiseOptions
- * @typedef {import('../types/notify').NotifyPromise} NotifyPromise
+ * @typedef {'success'|'error'|'warning'|'info'|'default'} NotifyType
+ * @typedef {'outline'|'subtle'|'elevated'|'solid'|'gradient'|'glass'} NotifyAppearance
  */
+
+/**
+ * @typedef {Object} NotifyAction
+ * @property {string} label
+ * @property {(toast: any) => void} [onClick]
+ * @property {*} [value]
+ */
+
+/**
+ * @typedef {Object} NotifyShowOptions
+ * @property {string} message
+ * @property {NotifyType} [type]
+ * @property {NotifyAppearance} [appearance]
+ * @property {number} [duration]
+ * @property {NotifyAction[]} [actions]
+ */
+
+/**
+ * @typedef {Object} NotifyPromiseOptions
+ * @property {string} [loading]
+ * @property {string|function|{message?: string|function, actions?: NotifyAction[]}} [success]
+ * @property {string|function|{message?: string|function, actions?: NotifyAction[]}} [error]
+ * @property {NotifyAppearance} [appearance]
+ * @property {number} [duration]
+ */
+
+// ------------------------------------------------------------
 
 let active;
 
 /**
- * Mount renderer instance
+ * Mount renderer
  */
 function mount() {
   active?.unmount?.();
@@ -21,15 +44,28 @@ function mount() {
   active.mount(state);
 }
 
-/** @type {NotifyAPI & {
- *   Appearance: Record<string, NotifyAppearance>,
- *   Type: Record<string, NotifyType>,
- *   Position: Record<string, string>
- * }} */
+// ------------------------------------------------------------
+// INTERNAL HELPERS
+// ------------------------------------------------------------
+
+function normalizeInput(input) {
+  if (typeof input === 'string') {
+    return { message: input };
+  }
+  return input || {};
+}
+
+function normalizeType(type) {
+  const TYPES = Object.values(NotifyIt.Type);
+  return TYPES.includes(type) ? type : 'default';
+}
+
+// ------------------------------------------------------------
+
 const NotifyIt = {
 
   // ------------------------------------------------------------
-  // CONSTANTS (AUTO-COMPLETE REAL)
+  // CONSTANTS
   // ------------------------------------------------------------
 
   Appearance: Object.freeze({
@@ -69,32 +105,47 @@ const NotifyIt = {
     mount();
   },
 
-  /** @type {(options: NotifyShowOptions) => NotifyPromise} */
-  show,
+  /**
+   * @param {string|NotifyShowOptions} options
+   */
+  show(options) {
+    const opts = normalizeInput(options);
 
-  success: (message, options) =>
-    show({ message, type: 'success', ...options }),
+    return show({
+      ...opts,
+      type: normalizeType(opts.type)
+    });
+  },
 
-  error: (message, options) =>
-    show({ message, type: 'error', ...options }),
+  success(message, options = {}) {
+    return this.show({ message, type: 'success', ...options });
+  },
 
-  warning: (message, options) =>
-    show({ message, type: 'warning', ...options }),
+  error(message, options = {}) {
+    return this.show({ message, type: 'error', ...options });
+  },
 
-  info: (message, options) =>
-    show({ message, type: 'info', ...options }),
+  warning(message, options = {}) {
+    return this.show({ message, type: 'warning', ...options });
+  },
+
+  info(message, options = {}) {
+    return this.show({ message, type: 'info', ...options });
+  },
 
   remove,
   clear,
 
-  config(config) {
+  config(config = {}) {
     state.config = {
       ...state.config,
       ...config
     };
   },
 
-  getState: () => state,
+  getState() {
+    return state;
+  },
 
   // ------------------------------------------------------------
   // BACKEND
@@ -118,7 +169,7 @@ const NotifyIt = {
       data.type ||
       (data.success === false ? 'error' : 'success');
 
-    show({
+    this.show({
       message: data.message || '',
       type,
       appearance: data.appearance,
@@ -138,7 +189,7 @@ const NotifyIt = {
     const type = xhr.getResponseHeader('HX-Notify-Type');
 
     if (message) {
-      show({
+      this.show({
         message,
         type: type || 'default'
       });
@@ -160,10 +211,9 @@ const NotifyIt = {
   /**
    * @param {Promise<any>} promise
    * @param {NotifyPromiseOptions} [options]
-   * @returns {Promise<any>}
    */
   promise(promise, options = {}) {
-    const loading = show({
+    const loading = this.show({
       message: options.loading || 'Loading...',
       type: 'info',
       appearance: options.appearance,
@@ -175,18 +225,22 @@ const NotifyIt = {
         setTimeout(() => remove(loading.toast.id), 300);
 
         const msg =
-          options.success?.message ||
-          options.success ||
-          'Success';
+          typeof options.success === 'object'
+            ? options.success.message
+            : options.success;
 
-        show({
-          message: typeof msg === 'function'
-            ? msg(result)
-            : msg,
+        this.show({
+          message:
+            typeof msg === 'function'
+              ? msg(result)
+              : msg || 'Success',
           type: 'success',
           appearance: options.appearance,
           duration: options.duration,
-          actions: options.success?.actions
+          actions:
+            typeof options.success === 'object'
+              ? options.success.actions
+              : undefined
         });
 
         return result;
@@ -195,18 +249,22 @@ const NotifyIt = {
         setTimeout(() => remove(loading.toast.id), 300);
 
         const msg =
-          options.error?.message ||
-          options.error ||
-          'Error';
+          typeof options.error === 'object'
+            ? options.error.message
+            : options.error;
 
-        show({
-          message: typeof msg === 'function'
-            ? msg(error)
-            : msg,
+        this.show({
+          message:
+            typeof msg === 'function'
+              ? msg(error)
+              : msg || 'Error',
           type: 'error',
           appearance: options.appearance,
           duration: options.duration,
-          actions: options.error?.actions
+          actions:
+            typeof options.error === 'object'
+              ? options.error.actions
+              : undefined
         });
 
         throw error;
@@ -214,6 +272,12 @@ const NotifyIt = {
   }
 };
 
-window.NotifyIt = NotifyIt;
+// ------------------------------------------------------------
+// GLOBAL
+// ------------------------------------------------------------
+
+if (typeof window !== 'undefined') {
+  window.NotifyIt = NotifyIt;
+}
 
 export default NotifyIt;

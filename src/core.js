@@ -1,82 +1,32 @@
-/**
- * @typedef {'success'|'error'|'warning'|'info'|'default'} NotifyType
- */
+// core.js
 
-/**
- * @typedef {'outline'|'subtle'|'elevated'|'solid'|'gradient'|'glass'} NotifyAppearance
- */
-
-/**
- * @typedef {Object} NotifyAction
- * @property {string} label
- * @property {function(NotifyToast):void} [onClick]
- * @property {*} [value]
- */
-
-/**
- * @typedef {Object} NotifyConfig
- * @property {string} position
- * @property {number} duration
- * @property {number} max
- * @property {boolean} closable
- * @property {boolean} pauseOnHover
- * @property {NotifyAppearance} appearance
- * @property {string} layout
- * @property {boolean} icon
- */
-
-/**
- * @typedef {Object} NotifyToast
- * @property {string} id
- * @property {string} message
- * @property {NotifyType} type
- * @property {string} title
- * @property {NotifyAppearance} appearance
- * @property {string} layout
- * @property {string} position
- * @property {number} duration
- * @property {boolean} closable
- * @property {boolean} pauseOnHover
- * @property {NotifyAction[]} actions
- * @property {Function} resolve
- * @property {Promise} promise
- * @property {number|null} timeoutId
- * @property {number|null} startTime
- * @property {number|null} remaining
- * @property {boolean} visible
- */
-
-/**
- * @typedef {Object} NotifyState
- * @property {NotifyConfig} config
- * @property {NotifyToast[]} toasts
- * @property {Set<Function>} listeners
- */
-
-
-/** @type {NotifyState} */
-const state = {
+export const state = {
   config: {
     position: 'top-right',
     duration: 4000,
     max: 5,
     closable: true,
     pauseOnHover: true,
-
     appearance: 'elevated',
     layout: 'default',
-
     icon: true
   },
   toasts: [],
   listeners: new Set()
 };
 
+// ------------------------------------------------------------
+
 function emit() {
-  state.listeners.forEach(fn => fn(state));
+  state.listeners.forEach(fn =>
+    fn({
+      config: state.config,
+      toasts: state.toasts
+    })
+  );
 }
 
-function subscribe(fn) {
+export function subscribe(fn) {
   state.listeners.add(fn);
   return () => state.listeners.delete(fn);
 }
@@ -85,10 +35,9 @@ function uid() {
   return 'nt_' + Date.now() + Math.random().toString(16).slice(2);
 }
 
-/**
- * @returns {NotifyToast}
- */
-function normalize(opts = {}) {
+// ------------------------------------------------------------
+
+function normalize(opts) {
   let resolve;
   const promise = new Promise(r => (resolve = r));
 
@@ -130,9 +79,8 @@ function normalize(opts = {}) {
   };
 }
 
-/**
- * @param {NotifyToast} t
- */
+// ------------------------------------------------------------
+
 function startTimer(t) {
   if (t.duration <= 0) return;
 
@@ -144,16 +92,16 @@ function startTimer(t) {
   }, t.remaining);
 }
 
-function pauseTimer(t) {
+export function pauseTimer(t) {
   if (!t.timeoutId) return;
 
   clearTimeout(t.timeoutId);
 
-  const elapsed = Date.now() - t.startTime;
-  t.remaining -= elapsed;
+  const elapsed = Date.now() - (t.startTime || 0);
+  t.remaining = (t.remaining || 0) - elapsed;
 }
 
-function resumeTimer(t) {
+export function resumeTimer(t) {
   if (t.remaining == null) return;
 
   if (t.remaining <= 50) {
@@ -167,19 +115,18 @@ function resumeTimer(t) {
   }, t.remaining);
 }
 
-/**
- * @param {Object} opts
- * @returns {Promise & { toast: NotifyToast }}
- */
-function add(opts) {
+// ------------------------------------------------------------
+
+export function show(opts) {
   const t = normalize(opts);
-  if (!t.message) return;
+
+  if (!t.message) throw new Error('Toast message is required');
 
   state.toasts.push(t);
 
   if (state.toasts.length > state.config.max) {
     const removed = state.toasts.shift();
-    removed?.resolve?.(false);
+    removed?.resolve(false);
   }
 
   emit();
@@ -191,20 +138,16 @@ function add(opts) {
   return Object.assign(t.promise, { toast: t });
 }
 
-/**
- * @param {string} id
- */
-function remove(id) {
+// ------------------------------------------------------------
+
+export function remove(id) {
   const t = state.toasts.find(x => x.id === id);
   if (!t) return;
 
   t.visible = false;
   emit();
 
-  if (t.resolve) {
-    t.resolve(false);
-    t.resolve = null;
-  }
+  t.resolve?.(false);
 
   clearTimeout(t.timeoutId);
 
@@ -214,21 +157,10 @@ function remove(id) {
   }, 180);
 }
 
-function clear() {
-  state.toasts.forEach(t => {
-    t.resolve?.(false);
-  });
+// ------------------------------------------------------------
 
+export function clear() {
+  state.toasts.forEach(t => t.resolve?.(false));
   state.toasts = [];
   emit();
 }
-
-export {
-  state,
-  subscribe,
-  add as show,
-  remove,
-  clear,
-  pauseTimer,
-  resumeTimer
-};

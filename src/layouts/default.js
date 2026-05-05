@@ -1,7 +1,8 @@
-import icons from '../render/icons.js';
+import icons from './icons.js';
 
 export default function defaultLayout(t, config) {
-  const actions = t.actions?.length
+
+  const actionsHTML = t.actions?.length
     ? `<div class="notify-actions">
         ${t.actions.map((a, i) => `
           <button class="notify-action" data-action="${i}">
@@ -18,13 +19,11 @@ export default function defaultLayout(t, config) {
       </div>
     ` : ''}
 
-    <div class="notify-main">
-      <div class="notify-message"></div>
-      ${actions}
+    <div class="notify-content">
+      <p class="notify-message">${t.message}</p>
+      ${actionsHTML}
     </div>
 
-    ${config.closable ? `
-      <button class="notify-close" aria-label="Close">×</button>
-    ` : ''}
+    ${config.closable ? `<button class="notify-close">×</button>` : ''}
   `;
 }

@@ -27,6 +27,20 @@ const icons = {
       <path d="M12 10v4"></path>
       <path d="M12 7h.01"></path>
     </svg>
+  `,
+
+  badge: `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <circle cx="12" cy="12" r="10"></circle>
+    </svg>
+  `,
+
+  default: `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 8a6 6 0 10-12 0c0 7-3 7-3 7h18s-3 0-3-7" />
+      <path d="M13.73 21a2 2 0 01-3.46 0" />
+    </svg>
   `
 };
 

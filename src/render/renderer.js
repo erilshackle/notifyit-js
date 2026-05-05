@@ -1,17 +1,24 @@
-import { subscribe, remove, pauseTimer, resumeTimer } from '../core.js';
+import {
+  subscribe,
+  remove,
+  pauseTimer,
+  resumeTimer
+} from './../core.js';
+
 import defaultLayout from '../layouts/default.js';
-import alpineLayout from '../layouts/alpine.js';
 
 const layouts = {
-  default: defaultLayout,
-  alpine: alpineLayout
+  default: defaultLayout
 };
+
+// ------------------------------------------------------------
 
 function createToastElement(t, config) {
   const el = document.createElement('div');
 
   const appearance = t.appearance || config.appearance;
   const layout = t.layout || config.layout;
+
   const layoutFn = layouts[layout] || layouts.default;
 
   el.className = `
@@ -25,7 +32,7 @@ function createToastElement(t, config) {
 
   el.innerHTML = layoutFn(t, config);
 
-  // mensagem (garantia)
+  // message injection (safe overwrite)
   const msgEl = el.querySelector('.notify-message');
   if (msgEl) msgEl.textContent = t.message;
 
@@ -35,7 +42,7 @@ function createToastElement(t, config) {
     el.addEventListener('mouseleave', () => resumeTimer(t));
   }
 
-  // close (fade only via core remove)
+  // close button
   const closeBtn = el.querySelector('.notify-close');
   if (closeBtn) {
     closeBtn.addEventListener('click', () => remove(t.id));
@@ -46,18 +53,20 @@ function createToastElement(t, config) {
     btn.addEventListener('click', () => {
       const action = t.actions?.[i];
 
-      action?.onClick?.(t);
+      if (action?.onClick) {
+        action.onClick(t);
+      }
 
       if (t.resolve) {
         t.resolve(action?.value ?? true);
-        t.resolve = null;
+        t.resolve = null; // prevent reuse
       }
 
       remove(t.id);
     });
   });
 
-  // enter animation
+  // animation enter
   requestAnimationFrame(() => {
     el.classList.remove('notify-enter');
     el.classList.add('notify-enter-active');
@@ -65,6 +74,8 @@ function createToastElement(t, config) {
 
   return el;
 }
+
+// ------------------------------------------------------------
 
 export default function Renderer() {
   let containers = {};
@@ -102,7 +113,7 @@ export default function Renderer() {
       container.appendChild(el);
     });
 
-    // cleanup com fade
+    // cleanup
     elements.forEach((el, id) => {
       if (activeIds.has(id)) return;
 
@@ -116,9 +127,9 @@ export default function Renderer() {
   }
 
   return {
-    mount(state) {
+    mount(initialState) {
       unsubscribe = subscribe(render);
-      render(state);
+      render(initialState);
     },
 
     unmount() {

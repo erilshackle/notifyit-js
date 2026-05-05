@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <title>NotifyIt Playground</title>
+
+  <link rel="stylesheet" href="src/style.css">
+
+  <style>
+    :root {
+      --bg: #0b1220;
+      --panel: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.12);
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #60a5fa;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: radial-gradient(circle at top, #111827, #0b1220);
+      color: var(--text);
+      height: 100vh;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .app {
+      width: 980px;
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 20px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      backdrop-filter: blur(10px);
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 14px;
+      color: var(--muted);
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+
+    label {
+      font-size: 12px;
+      color: var(--muted);
+      display: block;
+      margin-top: 10px;
+    }
+
+    input, select {
+      width: 100%;
+      margin-top: 5px;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,0.3);
+      color: var(--text);
+      outline: none;
+    }
+
+    input[type="checkbox"] {
+      width: auto;
+      margin-right: 6px;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    button {
+      width: 100%;
+      margin-top: 12px;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 500;
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--border);
+    }
+
+    .actions button {
+      margin-top: 8px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .actions button:hover {
+      background: rgba(255,255,255,0.12);
+    }
+
+    .preview {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      backdrop-filter: blur(10px);
+      text-align: center;
+    }
+
+    .title {
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- CONFIG -->
+  <div class="panel">
+
+    <h2>Config</h2>
+
+    <label>Position</label>
+    <select id="position">
+      <option value="top-right">Top Right</option>
+      <option value="top-left">Top Left</option>
+      <option value="bottom-right">Bottom Right</option>
+      <option value="bottom-left">Bottom Left</option>
+    </select>
+
+    <label>Appearance</label>
+    <select id="appearance">
+      <option value="elevated">Elevated</option>
+      <option value="outline">Outline</option>
+      <option value="solid">Solid</option>
+      <option value="glass">Glass</option>
+      <option value="gradient">Gradient</option>
+    </select>
+
+    <label>Duration</label>
+    <input id="duration" type="number" value="4000" />
+
+    <label>Max</label>
+    <input id="max" type="number" value="5" />
+
+    <div class="row">
+      <input id="icon" type="checkbox" checked />
+      <label>Show Icon</label>
+    </div>
+
+    <div class="row">
+      <input id="closable" type="checkbox" checked />
+      <label>Closable</label>
+    </div>
+
+    <div class="row">
+      <input id="pause" type="checkbox" checked />
+      <label>Pause on hover</label>
+    </div>
+
+    <button onclick="applyConfig()">Apply Config</button>
+    <button class="btn-secondary" onclick="NotifyIt.clear()">Clear All</button>
+
+    <h2 style="margin-top:16px;">Tests</h2>
+
+    <div class="actions">
+      <button onclick="NotifyIt.success('Success message!')">Success</button>
+      <button onclick="NotifyIt.error('Something failed!')">Error</button>
+      <button onclick="NotifyIt.warning('Be careful!')">Warning</button>
+      <button onclick="NotifyIt.info('Just info')">Info</button>
+    </div>
+
+  </div>
+
+  <!-- PREVIEW -->
+  <div class="preview">
+
+    <div class="card">
+      <div class="title">NotifyIt Playground</div>
+      <div class="subtitle">Test your notification system in real-time</div>
+      <div class="hint">Click buttons on the left to generate toasts</div>
+    </div>
+
+  </div>
+
+</div>
+
+<script type="module">
+  import NotifyIt from './src/index.js';
+
+  NotifyIt.init({
+    position: 'top-right',
+    duration: 4000,
+    max: 5,
+    closable: true,
+    pauseOnHover: true,
+    appearance: 'elevated',
+    layout: 'default',
+    icon: true
+  });
+
+  window.NotifyIt = NotifyIt;
+
+  window.applyConfig = () => {
+    NotifyIt.config({
+      position: document.getElementById('position').value,
+      appearance: document.getElementById('appearance').value,
+      duration: Number(document.getElementById('duration').value),
+      max: Number(document.getElementById('max').value),
+      icon: document.getElementById('icon').checked,
+      closable: document.getElementById('closable').checked,
+      pauseOnHover: document.getElementById('pause').checked
+    });
+  };
+</script>
+
+</body>
+</html>
