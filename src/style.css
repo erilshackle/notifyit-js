@@ -1,0 +1,430 @@
+/* ------------------------------------------------------------------
+ * VARIABLES
+ * ------------------------------------------------------------------ */
+
+:root {
+    --notify-bg: #ffffff;
+    --notify-text: #111827;
+    --notify-border: #e5e7eb;
+    --notify-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+        0 4px 6px -2px rgb(0 0 0 / 0.05);
+
+    --notify-success: #10b981;
+    --notify-error: #ef4444;
+    --notify-warning: #f59e0b;
+    --notify-info: #3b82f6;
+}
+
+/* ------------------------------------------------------------------
+ * CONTAINER
+ * ------------------------------------------------------------------ */
+
+.notify-container {
+    position: fixed;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 420px;
+    padding: 12px;
+}
+
+.notify-top-right {
+    top: 0;
+    right: 0;
+}
+
+.notify-top-left {
+    top: 0;
+    left: 0;
+}
+
+.notify-bottom-right {
+    bottom: 0;
+    right: 0;
+}
+
+.notify-bottom-left {
+    bottom: 0;
+    left: 0;
+}
+
+/* ------------------------------------------------------------------
+ * BASE TOAST
+ * ------------------------------------------------------------------ */
+
+.notify {
+    background: var(--notify-bg);
+    color: var(--notify-text);
+
+    border-radius: 10px;
+    border: 1px solid var(--notify-border);
+    box-shadow: var(--notify-shadow);
+
+    padding: 12px 14px;
+
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: "icon main close";
+
+    column-gap: 10px;
+    align-items: start;
+
+    min-width: 260px;
+}
+
+/* ------------------------------------------------------------------
+ * ICON
+ * ------------------------------------------------------------------ */
+
+.notify-icon {
+    grid-area: icon;
+    width: 20px;
+    height: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-top: 2px;
+}
+
+.notify-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.notify-success .notify-icon svg {
+    color: var(--notify-success);
+}
+
+.notify-error .notify-icon svg {
+    color: var(--notify-error);
+}
+
+.notify-warning .notify-icon svg {
+    color: var(--notify-warning);
+}
+
+.notify-info .notify-icon svg {
+    color: var(--notify-info);
+}
+
+/* ------------------------------------------------------------------
+ * MAIN
+ * ------------------------------------------------------------------ */
+
+.notify-main {
+    grid-area: main;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.notify-message {
+    font-size: 14px;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+/* ------------------------------------------------------------------
+ * ACTIONS
+ * ------------------------------------------------------------------ */
+
+.notify-actions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.notify-action {
+    font-size: 12px;
+    padding: 4px 8px;
+
+    border-radius: 6px;
+    border: 1px solid var(--notify-border);
+
+    background: transparent;
+    cursor: pointer;
+
+    opacity: 0.85;
+    transition: 0.15s ease;
+}
+
+.notify-action:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* ------------------------------------------------------------------
+ * CLOSE
+ * ------------------------------------------------------------------ */
+
+.notify-close {
+    grid-area: close;
+
+    width: 22px;
+    height: 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 6px;
+
+    border: none;
+    background: transparent;
+
+    color: var(--notify-text);
+    font-size: 14px;
+
+    opacity: 0.45;
+    cursor: pointer;
+
+    transition: 0.15s ease;
+}
+
+.notify-close:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.06);
+}
+
+/* ------------------------------------------------------------------
+ * APPEARANCES
+ * ------------------------------------------------------------------ */
+
+/* OUTLINE (ex-border) */
+.notify--outline.notify-success {
+    border-left: 4px solid var(--notify-success);
+}
+
+.notify--outline.notify-error {
+    border-left: 4px solid var(--notify-error);
+}
+
+.notify--outline.notify-warning {
+    border-left: 4px solid var(--notify-warning);
+}
+
+.notify--outline.notify-info {
+    border-left: 4px solid var(--notify-info);
+}
+
+/* SUBTLE (ex-soft/minimal) */
+.notify--subtle.notify-success {
+    background: rgba(16, 185, 129, 0.08);
+    border-color: rgba(16, 185, 129, 0.2);
+}
+
+.notify--subtle.notify-error {
+    background: rgba(239, 68, 68, 0.08);
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.notify--subtle.notify-warning {
+    background: rgba(245, 158, 11, 0.08);
+    border-color: rgba(245, 158, 11, 0.2);
+}
+
+.notify--subtle.notify-info {
+    background: rgba(59, 130, 246, 0.08);
+    border-color: rgba(59, 130, 246, 0.2);
+}
+
+/* ELEVATED (DEFAULT) */
+.notify--elevated {
+    background: var(--notify-bg);
+    border: 1px solid var(--notify-border);
+    box-shadow: var(--notify-shadow);
+}
+
+/* SOLID */
+.notify--solid {
+    border: none;
+    color: #fff;
+}
+
+.notify--solid.notify-success {
+    background: var(--notify-success);
+}
+
+.notify--solid.notify-error {
+    background: var(--notify-error);
+}
+
+.notify--solid.notify-warning {
+    background: var(--notify-warning);
+}
+
+.notify--solid.notify-info {
+    background: var(--notify-info);
+}
+
+.notify--solid .notify-close {
+    color: #fff;
+    opacity: 0.7;
+}
+
+.notify--solid .notify-close:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.notify--solid .notify-action {
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #fff;
+}
+
+.notify--solid .notify-action:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.notify--solid .notify-icon svg{
+    color: var(--notify-bg);
+}
+
+/* GRADIENT */
+.notify--gradient {
+    border: none;
+    color: #fff;
+}
+
+.notify--gradient.notify-success {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.notify--gradient.notify-error {
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
+}
+
+.notify--gradient.notify-warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.notify--gradient.notify-info {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+
+/* GLASS */
+.notify--glass {
+    position: relative;
+    overflow: hidden;
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.notify--glass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: linear-gradient(120deg,
+            rgba(255, 255, 255, 0.35) 0%,
+            rgba(255, 255, 255, 0.15) 40%,
+            rgba(255, 255, 255, 0.05) 60%,
+            transparent 100%);
+
+    opacity: 0.6;
+    pointer-events: none;
+
+    transition: opacity 0.3s ease, transform 0.4s ease;
+}
+
+.notify--glass:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.notify--glass:hover::before {
+    opacity: 0.9;
+    transform: translateX(10%);
+}
+
+.notify--glass::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -60%;
+
+    width: 50%;
+    height: 100%;
+
+    background: linear-gradient(120deg,
+            transparent,
+            rgba(255, 255, 255, 0.4),
+            transparent);
+
+    transform: skewX(-20deg);
+    opacity: 0;
+
+    pointer-events: none;
+}
+
+.notify--glass:hover::after {
+    animation: glass-sweep 0.9s ease forwards;
+}
+
+/* FLAT (bordas retas) */
+.notify--flat {
+    border-radius: 4px;
+    box-shadow: none;
+}
+
+/* ------------------------------------------------------------------
+ * ANIMATIONS
+ * ------------------------------------------------------------------ */
+
+.notify-enter {
+    opacity: 0;
+    transform: translateY(6px);
+}
+
+.notify-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.2s ease;
+}
+
+.notify-leave-active {
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+@keyframes glass-sweep {
+    0% {
+        left: -60%;
+        opacity: 0;
+    }
+
+    30% {
+        opacity: 1;
+    }
+
+    100% {
+        left: 120%;
+        opacity: 0;
+    }
+}
+
+/* ------------------------------------------------------------------
+ * DARK MODE
+ * ------------------------------------------------------------------ */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --notify-bg: #1f2933;
+        --notify-text: #f9fafb;
+        --notify-border: #374151;
+    }
+
+    .notify--glass {
+        background: rgba(31, 41, 51, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+}

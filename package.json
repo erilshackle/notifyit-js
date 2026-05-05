@@ -1,0 +1,40 @@
+{
+  "name": "notifyit-js",
+  "version": "1.0.0",
+  "description": "Lightweight, framework-agnostic notification system with HTMX support",
+  "main": "src/index.js",
+  "type": "module",
+
+  "types": "types/notify.d.ts",
+
+  "files": [
+    "src",
+    "dist",
+    "types"
+  ],
+
+  "scripts": {
+    "build": "microbundle src/index.js -o dist/notifyit.js --name Notifyit"
+  },
+
+  "exports": {
+    ".": {
+      "types": "./types/notify.d.ts",
+      "import": "./dist/notifyit.js"
+    }
+  },
+
+  "keywords": [
+    "toast",
+    "notification",
+    "htmx",
+    "vanilla-js",
+    "alpinejs"
+  ],
+
+  "author": "Erilando Carvalho",
+  "license": "MIT",
+  "devDependencies": {
+    "microbundle": "^0.15.1"
+  }
+}
