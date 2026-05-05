@@ -1,6 +1,14 @@
-// index.js
 import { state, show, remove, clear } from './core.js';
 import Renderer from './render/renderer.js';
+
+/**
+ * @typedef {import('../types/notify').NotifyAPI} NotifyAPI
+ * @typedef {import('../types/notify').NotifyAppearance} NotifyAppearance
+ * @typedef {import('../types/notify').NotifyType} NotifyType
+ * @typedef {import('../types/notify').NotifyShowOptions} NotifyShowOptions
+ * @typedef {import('../types/notify').NotifyPromiseOptions} NotifyPromiseOptions
+ * @typedef {import('../types/notify').NotifyPromise} NotifyPromise
+ */
 
 let active;
 
@@ -13,26 +21,45 @@ function mount() {
   active.mount(state);
 }
 
-
-/**
- * @typedef {import('../types/notify').NotifyAPI} NotifyAPI
- */
-
-/** @type {NotifyAPI} */
+/** @type {NotifyAPI & {
+ *   Appearance: Record<string, NotifyAppearance>,
+ *   Type: Record<string, NotifyType>,
+ *   Position: Record<string, string>
+ * }} */
 const NotifyIt = {
 
   // ------------------------------------------------------------
-  // CORE LIFECYCLE
+  // CONSTANTS (AUTO-COMPLETE REAL)
   // ------------------------------------------------------------
 
-  /**
-   * Initialize notification system
-   * @param {Object} config
-   * @param {NotifyAppearance} [config.appearance]
-   * @param {NotifyType} [config.type]
-   * @param {number} [config.duration]
-   * @param {boolean} [config.closable]
-   */
+  Appearance: Object.freeze({
+    OUTLINE: 'outline',
+    SUBTLE: 'subtle',
+    ELEVATED: 'elevated',
+    SOLID: 'solid',
+    GRADIENT: 'gradient',
+    GLASS: 'glass'
+  }),
+
+  Type: Object.freeze({
+    SUCCESS: 'success',
+    ERROR: 'error',
+    WARNING: 'warning',
+    INFO: 'info',
+    DEFAULT: 'default'
+  }),
+
+  Position: Object.freeze({
+    TOP_RIGHT: 'top-right',
+    TOP_LEFT: 'top-left',
+    BOTTOM_RIGHT: 'bottom-right',
+    BOTTOM_LEFT: 'bottom-left'
+  }),
+
+  // ------------------------------------------------------------
+  // CORE
+  // ------------------------------------------------------------
+
   init(config = {}) {
     state.config = {
       ...state.config,
@@ -42,55 +69,24 @@ const NotifyIt = {
     mount();
   },
 
-  /**
-   * Show a notification
-   * @param {Object} options
-   * @param {string} options.message
-   * @param {NotifyType} [options.type]
-   * @param {NotifyAppearance} [options.appearance]
-   * @param {number} [options.duration]
-   * @param {Array<{label:string,onClick?:Function,value?:any}>} [options.actions]
-   */
+  /** @type {(options: NotifyShowOptions) => NotifyPromise} */
   show,
 
-  /**
-   * Success shortcut
-   */
   success: (message, options) =>
     show({ message, type: 'success', ...options }),
 
-  /**
-   * Error shortcut
-   */
   error: (message, options) =>
     show({ message, type: 'error', ...options }),
 
-  /**
-   * Warning shortcut
-   */
   warning: (message, options) =>
     show({ message, type: 'warning', ...options }),
 
-  /**
-   * Info shortcut
-   */
   info: (message, options) =>
     show({ message, type: 'info', ...options }),
 
-  /**
-   * Remove a toast by id
-   */
   remove,
-
-  /**
-   * Clear all toasts
-   */
   clear,
 
-  /**
-   * Update runtime config
-   * @param {Object} config
-   */
   config(config) {
     state.config = {
       ...state.config,
@@ -98,19 +94,12 @@ const NotifyIt = {
     };
   },
 
-  /**
-   * Get internal state (debug only)
-   */
   getState: () => state,
 
   // ------------------------------------------------------------
-  // BACKEND HELPERS
+  // BACKEND
   // ------------------------------------------------------------
 
-  /**
-   * Parse JSON response and show toast
-   * @param {Object|string} json
-   */
   fromJsonResponse(json) {
     if (!json) return;
 
@@ -137,10 +126,6 @@ const NotifyIt = {
     });
   },
 
-  /**
-   * Handle HTMX response headers or JSON fallback
-   * @param {Event} event
-   */
   triggerHx(event) {
     const xhr =
       event?.detail?.xhr ||
@@ -164,27 +149,17 @@ const NotifyIt = {
       const json = JSON.parse(xhr.responseText);
       this.fromJsonResponse(json);
     } catch {
-      // silent fail
+      // silent
     }
   },
 
   // ------------------------------------------------------------
-  // PROMISE HELPER
+  // PROMISE
   // ------------------------------------------------------------
 
   /**
-   * Wrap a promise with toast lifecycle
-   *
-   * - shows loading toast
-   * - replaces with success or error toast
-   *
-   * @param {Promise} promise
-   * @param {Object} [options]
-   * @param {string} [options.loading]
-   * @param {string|Function} [options.success]
-   * @param {string|Function} [options.error]
-   * @param {NotifyAppearance} [options.appearance]
-   * @param {number} [options.duration]
+   * @param {Promise<any>} promise
+   * @param {NotifyPromiseOptions} [options]
    * @returns {Promise<any>}
    */
   promise(promise, options = {}) {
