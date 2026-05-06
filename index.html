@@ -2,227 +2,189 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8" />
-  <title>NotifyIt Playground</title>
+  <title>NotifyIt</title>
 
   <link rel="stylesheet" href="src/style.css">
 
   <style>
     :root {
       --bg: #0b1220;
-      --panel: rgba(255,255,255,0.06);
-      --border: rgba(255,255,255,0.12);
       --text: #e5e7eb;
       --muted: #9ca3af;
-      --accent: #60a5fa;
+      --accent: #3b82f6;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       font-family: system-ui, sans-serif;
       background: radial-gradient(circle at top, #111827, #0b1220);
       color: var(--text);
-      height: 100vh;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
     }
 
-    .app {
-      width: 980px;
-      display: grid;
-      grid-template-columns: 340px 1fr;
-      gap: 20px;
-    }
+    /* ---------------------------------- */
+    /* HERO */
+    /* ---------------------------------- */
 
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px;
-      backdrop-filter: blur(10px);
-    }
-
-    h2 {
-      margin: 0 0 14px;
-      font-size: 14px;
-      color: var(--muted);
-      letter-spacing: 0.4px;
-      text-transform: uppercase;
-    }
-
-    label {
-      font-size: 12px;
-      color: var(--muted);
-      display: block;
-      margin-top: 10px;
-    }
-
-    input, select {
-      width: 100%;
-      margin-top: 5px;
-      padding: 8px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: rgba(0,0,0,0.3);
-      color: var(--text);
-      outline: none;
-    }
-
-    input[type="checkbox"] {
-      width: auto;
-      margin-right: 6px;
-    }
-
-    .row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 8px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    button {
-      width: 100%;
-      margin-top: 12px;
-      padding: 10px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 500;
-      background: linear-gradient(135deg, #3b82f6, #2563eb);
-      color: white;
-      transition: 0.2s;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-    }
-
-    .btn-secondary {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid var(--border);
-    }
-
-    .actions button {
-      margin-top: 8px;
-      background: rgba(255,255,255,0.08);
-    }
-
-    .actions button:hover {
-      background: rgba(255,255,255,0.12);
-    }
-
-    .preview {
+    .hero {
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
+      align-items: center;
       justify-content: center;
-      gap: 12px;
-    }
-
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 20px;
-      backdrop-filter: blur(10px);
       text-align: center;
+      padding: 40px 20px;
     }
 
-    .title {
-      font-size: 18px;
-      margin-bottom: 6px;
+    .badge {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 48px;
+      margin: 0;
+      font-weight: 700;
     }
 
     .subtitle {
-      font-size: 13px;
+      margin-top: 10px;
+      font-size: 16px;
       color: var(--muted);
+      max-width: 520px;
     }
 
-    .hint {
+    /* ---------------------------------- */
+    /* BUTTON GRID (DEMO) */
+    /* ---------------------------------- */
+
+    .demo {
+      margin-top: 40px;
+      display: grid;
+      grid-template-columns: repeat(3, 160px);
+      gap: 12px;
+    }
+
+    .demo button {
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 14px;
+    }
+
+    .demo button:hover {
+      background: rgba(255,255,255,0.12);
+      transform: translateY(-1px);
+    }
+
+    .primary {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      border: none;
+    }
+
+    .primary:hover {
+      transform: translateY(-2px);
+    }
+
+    /* ---------------------------------- */
+    /* CONFIG INLINE */
+    /* ---------------------------------- */
+
+    .controls {
+      margin-top: 40px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    select {
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+    }
+
+    /* ---------------------------------- */
+    /* FOOT */
+    /* ---------------------------------- */
+
+    .foot {
+      margin-top: 30px;
       font-size: 12px;
       color: var(--muted);
-      margin-top: 10px;
     }
   </style>
 </head>
 
 <body>
 
-<div class="app">
+<div class="hero">
 
-  <!-- CONFIG -->
-  <div class="panel">
+  <div class="badge">Lightweight • Zero deps • Promise-ready</div>
 
-    <h2>Config</h2>
+  <h1>NotifyIt</h1>
 
-    <label>Position</label>
+  <div class="subtitle">
+    Elegant toast notifications for modern apps.<br>
+    Clean API. Smooth animations. Zero nonsense.
+  </div>
+
+  <!-- DEMO BUTTONS -->
+  <div class="demo">
+
+    <button onclick="NotifyIt.success('Success')">Success</button>
+    <button onclick="NotifyIt.error('Error')">Error</button>
+    <button onclick="NotifyIt.warning('Warning')">Warning</button>
+
+    <button onclick="NotifyIt.info('Info')">Info</button>
+    <button onclick="NotifyIt.show({ message: 'Default toast' })">Default</button>
+    <button onclick="NotifyIt.clear()">Clear</button>
+
+    <button onclick="testPromiseSuccess()">Promise OK</button>
+    <button onclick="testPromiseError()">Promise Fail</button>
+
+    <button class="primary" onclick="spam()">Spam 🔥</button>
+
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls">
     <select id="position">
       <option value="top-right">Top Right</option>
       <option value="top-left">Top Left</option>
       <option value="bottom-right">Bottom Right</option>
       <option value="bottom-left">Bottom Left</option>
+      <option value="top-center">Top Center</option>
+      <option value="bottom-center">Bottom Center</option>
     </select>
 
-    <label>Appearance</label>
     <select id="appearance">
       <option value="elevated">Elevated</option>
       <option value="outline">Outline</option>
       <option value="solid">Solid</option>
       <option value="glass">Glass</option>
       <option value="gradient">Gradient</option>
+      <option value="subtle">Subtle</option>
     </select>
 
-    <label>Duration</label>
-    <input id="duration" type="number" value="4000" />
-
-    <label>Max</label>
-    <input id="max" type="number" value="5" />
-
-    <div class="row">
-      <input id="icon" type="checkbox" checked />
-      <label>Show Icon</label>
-    </div>
-
-    <div class="row">
-      <input id="closable" type="checkbox" checked />
-      <label>Closable</label>
-    </div>
-
-    <div class="row">
-      <input id="pause" type="checkbox" checked />
-      <label>Pause on hover</label>
-    </div>
-
-    <button onclick="applyConfig()">Apply Config</button>
-    <button class="btn-secondary" onclick="NotifyIt.clear()">Clear All</button>
-
-    <h2 style="margin-top:16px;">Tests</h2>
-
-    <div class="actions">
-      <button onclick="NotifyIt.success('Success message!')">Success</button>
-      <button onclick="NotifyIt.error('Something failed!')">Error</button>
-      <button onclick="NotifyIt.warning('Be careful!')">Warning</button>
-      <button onclick="NotifyIt.info('Just info')">Info</button>
-    </div>
-
+    <select id="duration">
+      <option value="2000">2s</option>
+      <option value="4000" selected>4s</option>
+      <option value="8000">8s</option>
+      <option value="0">Sticky</option>
+    </select>
   </div>
 
-  <!-- PREVIEW -->
-  <div class="preview">
-
-    <div class="card">
-      <div class="title">NotifyIt Playground</div>
-      <div class="subtitle">Test your notification system in real-time</div>
-      <div class="hint">Click buttons on the left to generate toasts</div>
-    </div>
-
+  <div class="foot">
+    Try changing options and clicking buttons ↑
   </div>
 
 </div>
@@ -243,16 +205,46 @@
 
   window.NotifyIt = NotifyIt;
 
-  window.applyConfig = () => {
-    NotifyIt.config({
-      position: document.getElementById('position').value,
-      appearance: document.getElementById('appearance').value,
-      duration: Number(document.getElementById('duration').value),
-      max: Number(document.getElementById('max').value),
-      icon: document.getElementById('icon').checked,
-      closable: document.getElementById('closable').checked,
-      pauseOnHover: document.getElementById('pause').checked
+  // live config (auto apply)
+  document.querySelectorAll('select').forEach(el => {
+    el.addEventListener('change', () => {
+      NotifyIt.config({
+        position: document.getElementById('position').value,
+        appearance: document.getElementById('appearance').value,
+        duration: Number(document.getElementById('duration').value)
+      });
     });
+  });
+
+  // ------------------
+  // PROMISE DEMO
+  // ------------------
+
+  window.testPromiseSuccess = () => {
+    const p = new Promise(res => setTimeout(() => res("Loaded data"), 2000));
+
+    NotifyIt.promise(p, {
+      loading: "Loading...",
+      success: (r) => `Success: ${r}`
+    });
+  };
+
+  window.testPromiseError = () => {
+    const p = new Promise((_, rej) => setTimeout(() => rej("Fail"), 2000));
+
+    NotifyIt.promise(p, {
+      loading: "Requesting...",
+      error: (e) => `Error: ${e}`
+    }).catch(()=>{});
+  };
+
+  // stress test
+  window.spam = () => {
+    for (let i = 0; i < 5; i++) {
+      setTimeout(() => {
+        NotifyIt.show({ message: "Toast " + (i + 1) });
+      }, i * 120);
+    }
   };
 </script>
 

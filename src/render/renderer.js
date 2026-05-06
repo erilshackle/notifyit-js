@@ -32,17 +32,17 @@ function createToastElement(t, config) {
 
   el.innerHTML = layoutFn(t, config);
 
-  // message injection (safe overwrite)
+  // message (única fonte de verdade)
   const msgEl = el.querySelector('.notify-message');
   if (msgEl) msgEl.textContent = t.message;
 
-  // pause on hover
+  // hover pause
   if (t.pauseOnHover && t.duration > 0) {
     el.addEventListener('mouseenter', () => pauseTimer(t));
     el.addEventListener('mouseleave', () => resumeTimer(t));
   }
 
-  // close button
+  // close
   const closeBtn = el.querySelector('.notify-close');
   if (closeBtn) {
     closeBtn.addEventListener('click', () => remove(t.id));
@@ -59,14 +59,13 @@ function createToastElement(t, config) {
 
       if (t.resolve) {
         t.resolve(action?.value ?? true);
-        t.resolve = null; // prevent reuse
       }
 
       remove(t.id);
     });
   });
 
-  // animation enter
+  // animation
   requestAnimationFrame(() => {
     el.classList.remove('notify-enter');
     el.classList.add('notify-enter-active');
@@ -87,6 +86,13 @@ export default function Renderer() {
 
     const el = document.createElement('div');
     el.className = `notify-container notify-${pos}`;
+
+    if (pos.includes('center')) {
+      el.style.left = '50%';
+      el.style.transform = 'translateX(-50%)';
+      el.style.alignItems = 'center';
+    }
+    
     document.body.appendChild(el);
 
     containers[pos] = el;

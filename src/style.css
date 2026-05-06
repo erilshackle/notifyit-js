@@ -49,6 +49,20 @@
     left: 0;
 }
 
+.notify-top-center {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    align-items: center;
+}
+
+.notify-bottom-center {
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    align-items: center;
+}
+
 /* ------------------------------------------------------------------
  * BASE TOAST
  * ------------------------------------------------------------------ */
@@ -215,21 +229,48 @@
 .notify--subtle.notify-success {
     background: rgba(16, 185, 129, 0.08);
     border-color: rgba(16, 185, 129, 0.2);
+    color: var(--notify-success);
 }
 
 .notify--subtle.notify-error {
     background: rgba(239, 68, 68, 0.08);
     border-color: rgba(239, 68, 68, 0.2);
+    color: var(--notify-error);
 }
 
 .notify--subtle.notify-warning {
     background: rgba(245, 158, 11, 0.08);
     border-color: rgba(245, 158, 11, 0.2);
+    color: #b45309; /* melhor contraste que o amarelo puro */
 }
 
 .notify--subtle.notify-info {
     background: rgba(59, 130, 246, 0.08);
     border-color: rgba(59, 130, 246, 0.2);
+    color: var(--notify-info);
+}
+
+.notify--subtle .notify-icon svg {
+    color: currentColor;
+}
+
+.notify--subtle .notify-close {
+    color: currentColor;
+    opacity: 0.6;
+}
+
+.notify--subtle .notify-close:hover {
+    opacity: 1;
+    background: rgba(0,0,0,0.08);
+}
+
+.notify--subtle .notify-action {
+    border-color: currentColor;
+    color: currentColor;
+}
+
+.notify--subtle .notify-action:hover {
+    background: rgba(0,0,0,0.06);
 }
 
 /* ELEVATED (DEFAULT) */
@@ -279,7 +320,7 @@
     background: rgba(255, 255, 255, 0.15);
 }
 
-.notify--solid .notify-icon svg{
+.notify--solid .notify-icon svg {
     color: var(--notify-bg);
 }
 
@@ -310,13 +351,35 @@
     position: relative;
     overflow: hidden;
 
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
 
-    background: rgba(255, 255, 255, 0.55);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.18);
 
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.3s ease;
+
+    will-change: transform, opacity;
+}
+
+.notify--glass.notify-enter {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+    filter: blur(6px);
+}
+
+.notify--glass.notify-enter-active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+    transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.notify--glass.notify-leave-active {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+    filter: blur(6px);
+    transition: all 0.25s ease;
 }
 
 .notify--glass::before {
@@ -325,25 +388,40 @@
     inset: 0;
 
     background: linear-gradient(120deg,
-            rgba(255, 255, 255, 0.35) 0%,
-            rgba(255, 255, 255, 0.15) 40%,
-            rgba(255, 255, 255, 0.05) 60%,
-            transparent 100%);
+            transparent 0%,
+            rgba(255, 255, 255, 0.25) 35%,
+            rgba(255, 255, 255, 0.12) 50%,
+            transparent 70%);
 
-    opacity: 0.6;
+    transform: translateX(-120%);
     pointer-events: none;
-
-    transition: opacity 0.3s ease, transform 0.4s ease;
+    opacity: 0;
 }
 
 .notify--glass:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
 }
 
 .notify--glass:hover::before {
-    opacity: 0.9;
-    transform: translateX(10%);
+    opacity: 1;
+    animation: glass-sweep 1.2s ease forwards;
+}
+
+@keyframes glass-float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-1px);
+    }
+}
+
+.notify--glass {
+    animation: glass-float 6s ease-in-out infinite;
 }
 
 .notify--glass::after {

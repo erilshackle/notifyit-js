@@ -222,7 +222,8 @@ const NotifyIt = {
 
     return promise
       .then((result) => {
-        setTimeout(() => remove(loading.toast.id), 300);
+        // setTimeout(() => 
+          remove(loading.toast.id);
 
         const msg =
           typeof options.success === 'object'

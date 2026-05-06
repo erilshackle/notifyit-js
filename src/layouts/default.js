@@ -1,7 +1,6 @@
 import icons from './icons.js';
 
 export default function defaultLayout(t, config) {
-
   const actionsHTML = t.actions?.length
     ? `<div class="notify-actions">
         ${t.actions.map((a, i) => `
@@ -15,12 +14,12 @@ export default function defaultLayout(t, config) {
   return `
     ${config.icon ? `
       <div class="notify-icon">
-        ${icons[t.type] || icons.info}
+        ${icons[t.type] || icons.default}
       </div>
     ` : ''}
 
-    <div class="notify-content">
-      <p class="notify-message">${t.message}</p>
+    <div class="notify-main">
+      <div class="notify-message"></div>
       ${actionsHTML}
     </div>
 
