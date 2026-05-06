@@ -5,7 +5,7 @@ import {
   resumeTimer
 } from './../core.js';
 
-import defaultLayout from '../layouts/default.js';
+import defaultLayout from '../layouts/template.js';
 
 const layouts = {
   default: defaultLayout
@@ -21,51 +21,78 @@ function createToastElement(t, config) {
 
   const layoutFn = layouts[layout] || layouts.default;
 
-  el.className = `
-    notify
-    notify-${t.type}
-    notify--${appearance}
-    notify-enter
-  `;
+  const mode = t.mode || config.mode || 'neutral';
 
-  el.setAttribute('data-type', t.title || t.type);
+  el.className = `
+  notify
+  notify-${t.type || 'default'}
+  notify--${mode}
+  notify-enter
+`.trim();
+
+  el.setAttribute('data-id', t.id);
 
   el.innerHTML = layoutFn(t, config);
 
-  // message (única fonte de verdade)
-  const msgEl = el.querySelector('.notify-message');
-  if (msgEl) msgEl.textContent = t.message;
+  // ------------------------------------------------------------
+  // TITLE
+  // ------------------------------------------------------------
 
-  // hover pause
+  const titleEl = el.querySelector('.notify-title');
+  if (titleEl && t.title) {
+    titleEl.textContent = t.title;
+  }
+
+  // ------------------------------------------------------------
+  // MESSAGE / DESCRIPTION (PRIORIDADE CLARA)
+  // ------------------------------------------------------------
+
+  const msgEl = el.querySelector('.notify-message');
+  if (msgEl) {
+    msgEl.textContent =
+      t.description ??
+      t.message ??
+      '';
+  }
+
+  // ------------------------------------------------------------
+  // TIMER CONTROL
+  // ------------------------------------------------------------
+
   if (t.pauseOnHover && t.duration > 0) {
     el.addEventListener('mouseenter', () => pauseTimer(t));
     el.addEventListener('mouseleave', () => resumeTimer(t));
   }
 
-  // close
+  // ------------------------------------------------------------
+  // CLOSE
+  // ------------------------------------------------------------
+
   const closeBtn = el.querySelector('.notify-close');
   if (closeBtn) {
     closeBtn.addEventListener('click', () => remove(t.id));
   }
 
-  // actions
+  // ------------------------------------------------------------
+  // ACTIONS
+  // ------------------------------------------------------------
+
   el.querySelectorAll('.notify-action').forEach((btn, i) => {
     btn.addEventListener('click', () => {
       const action = t.actions?.[i];
 
-      if (action?.onClick) {
-        action.onClick(t);
-      }
+      action?.onClick?.(t);
 
-      if (t.resolve) {
-        t.resolve(action?.value ?? true);
-      }
+      t.resolve?.(action?.value ?? true);
 
       remove(t.id);
     });
   });
 
-  // animation
+  // ------------------------------------------------------------
+  // ANIMATION
+  // ------------------------------------------------------------
+
   requestAnimationFrame(() => {
     el.classList.remove('notify-enter');
     el.classList.add('notify-enter-active');
@@ -92,27 +119,25 @@ export default function Renderer() {
       el.style.transform = 'translateX(-50%)';
       el.style.alignItems = 'center';
     }
-    
-    document.body.appendChild(el);
 
+    document.body.appendChild(el);
     containers[pos] = el;
+
     return el;
   }
 
   function render(state) {
-    const config = state.config;
-    const activeIds = new Set();
+    const { config, toasts } = state;
+    const active = new Set();
 
-    state.toasts.forEach(t => {
+    toasts.forEach(t => {
       if (!t.visible) return;
 
-      const pos = t.position || config.position;
-      const container = getContainer(pos);
-
-      activeIds.add(t.id);
+      active.add(t.id);
 
       if (elements.has(t.id)) return;
 
+      const container = getContainer(t.position || config.position);
       const el = createToastElement(t, config);
 
       elements.set(t.id, el);
@@ -121,7 +146,7 @@ export default function Renderer() {
 
     // cleanup
     elements.forEach((el, id) => {
-      if (activeIds.has(id)) return;
+      if (active.has(id)) return;
 
       el.classList.add('notify-leave-active');
 

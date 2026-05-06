@@ -7,7 +7,7 @@ export const state = {
     max: 5,
     closable: true,
     pauseOnHover: true,
-    appearance: 'elevated',
+    mode: 'solid',
     layout: 'default',
     icon: true
   },
@@ -43,11 +43,17 @@ function normalize(opts) {
 
   return {
     id: uid(),
-    message: opts.message || '',
-    type: opts.type || 'default',
-    title: opts.title || opts.type || 'notification',
 
-    appearance: opts.appearance || state.config.appearance,
+    // 🔥 conteúdo correto
+    message: opts.message || '',
+    title: opts.title || null,
+    description: opts.description || null,
+
+    type: opts.type || 'default',
+
+    mode: opts.mode || state.config.mode,
+    effect: opts.effect ?? state.config.effect,
+
     layout: opts.layout || state.config.layout,
     position: opts.position || state.config.position,
 
@@ -120,7 +126,9 @@ export function resumeTimer(t) {
 export function show(opts) {
   const t = normalize(opts);
 
-  if (!t.message) throw new Error('Toast message is required');
+  if (!t.message && !t.title && !t.description) {
+    throw new Error('Toast requires message or title/description');
+  }
 
   state.toasts.push(t);
 

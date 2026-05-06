@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
   <meta charset="UTF-8" />
   <title>NotifyIt</title>
@@ -14,7 +15,9 @@
       --accent: #3b82f6;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -23,9 +26,7 @@
       color: var(--text);
     }
 
-    /* ---------------------------------- */
     /* HERO */
-    /* ---------------------------------- */
 
     .hero {
       min-height: 100vh;
@@ -56,22 +57,20 @@
       max-width: 520px;
     }
 
-    /* ---------------------------------- */
-    /* BUTTON GRID (DEMO) */
-    /* ---------------------------------- */
+    /* DEMO */
 
     .demo {
       margin-top: 40px;
       display: grid;
-      grid-template-columns: repeat(3, 160px);
+      grid-template-columns: repeat(3, 170px);
       gap: 12px;
     }
 
     .demo button {
       padding: 12px;
       border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06);
       color: var(--text);
       cursor: pointer;
       transition: 0.2s;
@@ -79,7 +78,7 @@
     }
 
     .demo button:hover {
-      background: rgba(255,255,255,0.12);
+      background: rgba(255, 255, 255, 0.12);
       transform: translateY(-1px);
     }
 
@@ -92,9 +91,7 @@
       transform: translateY(-2px);
     }
 
-    /* ---------------------------------- */
-    /* CONFIG INLINE */
-    /* ---------------------------------- */
+    /* CONTROLS */
 
     .controls {
       margin-top: 40px;
@@ -107,14 +104,10 @@
     select {
       padding: 8px 10px;
       border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06);
       color: var(--text);
     }
-
-    /* ---------------------------------- */
-    /* FOOT */
-    /* ---------------------------------- */
 
     .foot {
       margin-top: 30px;
@@ -126,127 +119,139 @@
 
 <body>
 
-<div class="hero">
+  <div class="hero">
 
-  <div class="badge">Lightweight • Zero deps • Promise-ready</div>
+    <div class="badge">Lightweight • Promise-based • Clean API</div>
 
-  <h1>NotifyIt</h1>
+    <h1>NotifyIt</h1>
 
-  <div class="subtitle">
-    Elegant toast notifications for modern apps.<br>
-    Clean API. Smooth animations. Zero nonsense.
+    <div class="subtitle">
+      Toast notifications inspired by modern UX.<br>
+      Minimal styles. Powerful behavior.
+    </div>
+
+    <!-- DEMO -->
+    <div class="demo">
+
+      <button onclick="NotifyIt.success('Saved successfully')">Success</button>
+      <button onclick="NotifyIt.error('Something failed')">Error</button>
+      <button onclick="NotifyIt.warning('Be careful')">Warning</button>
+
+      <button onclick="NotifyIt.info('Heads up')">Info</button>
+
+      <button onclick="NotifyIt.show({
+      title: 'Default',
+      message: 'Simple toast without type'
+    })">Default</button>
+
+      <button onclick="NotifyIt.show({
+      title: 'New message',
+      message: 'You have a new notification'
+    })">Rich</button>
+
+      <button onclick="testPromiseSuccess()">Promise OK</button>
+      <button onclick="testPromiseError()">Promise Fail</button>
+
+      <button class="primary" onclick="spam()">Spam 🔥</button>
+
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="controls">
+
+      <select id="position">
+        <option value="top-right">Top Right</option>
+        <option value="top-left">Top Left</option>
+        <option value="bottom-right">Bottom Right</option>
+        <option value="bottom-left">Bottom Left</option>
+        <option value="top-center">Top Center</option>
+        <option value="bottom-center">Bottom Center</option>
+      </select>
+
+      <!-- CORE STYLE -->
+      <select id="mode">
+        <option value="solid">Solid</option>
+        <option value="mono">Mono</option>
+        <option value="rich">Rich</option>
+      </select>
+
+      <select id="duration">
+        <option value="2000">2s</option>
+        <option value="4000" selected>4s</option>
+        <option value="8000">8s</option>
+        <option value="0">Sticky</option>
+      </select>
+
+    </div>
+
+    <div class="foot">
+      Change style → trigger → observe behavior
+    </div>
+
   </div>
 
-  <!-- DEMO BUTTONS -->
-  <div class="demo">
+  <script type="module">
+    import NotifyIt from './src/index.js';
 
-    <button onclick="NotifyIt.success('Success')">Success</button>
-    <button onclick="NotifyIt.error('Error')">Error</button>
-    <button onclick="NotifyIt.warning('Warning')">Warning</button>
+    NotifyIt.init({
+      position: 'top-right',
+      duration: 4000,
+      max: 5,
+      closable: true,
+      pauseOnHover: true,
+      mode: 'solid',
+      effect: '',
+      layout: 'default',
+      icon: true
+    });
 
-    <button onclick="NotifyIt.info('Info')">Info</button>
-    <button onclick="NotifyIt.show({ message: 'Default toast' })">Default</button>
-    <button onclick="NotifyIt.clear()">Clear</button>
+    window.NotifyIt = NotifyIt;
 
-    <button onclick="testPromiseSuccess()">Promise OK</button>
-    <button onclick="testPromiseError()">Promise Fail</button>
-
-    <button class="primary" onclick="spam()">Spam 🔥</button>
-
-  </div>
-
-  <!-- CONTROLS -->
-  <div class="controls">
-    <select id="position">
-      <option value="top-right">Top Right</option>
-      <option value="top-left">Top Left</option>
-      <option value="bottom-right">Bottom Right</option>
-      <option value="bottom-left">Bottom Left</option>
-      <option value="top-center">Top Center</option>
-      <option value="bottom-center">Bottom Center</option>
-    </select>
-
-    <select id="appearance">
-      <option value="elevated">Elevated</option>
-      <option value="outline">Outline</option>
-      <option value="solid">Solid</option>
-      <option value="glass">Glass</option>
-      <option value="gradient">Gradient</option>
-      <option value="subtle">Subtle</option>
-    </select>
-
-    <select id="duration">
-      <option value="2000">2s</option>
-      <option value="4000" selected>4s</option>
-      <option value="8000">8s</option>
-      <option value="0">Sticky</option>
-    </select>
-  </div>
-
-  <div class="foot">
-    Try changing options and clicking buttons ↑
-  </div>
-
-</div>
-
-<script type="module">
-  import NotifyIt from './src/index.js';
-
-  NotifyIt.init({
-    position: 'top-right',
-    duration: 4000,
-    max: 5,
-    closable: true,
-    pauseOnHover: true,
-    appearance: 'elevated',
-    layout: 'default',
-    icon: true
-  });
-
-  window.NotifyIt = NotifyIt;
-
-  // live config (auto apply)
-  document.querySelectorAll('select').forEach(el => {
-    el.addEventListener('change', () => {
-      NotifyIt.config({
-        position: document.getElementById('position').value,
-        appearance: document.getElementById('appearance').value,
-        duration: Number(document.getElementById('duration').value)
+    // live config
+    document.querySelectorAll('select').forEach(el => {
+      el.addEventListener('change', () => {
+        NotifyIt.config({
+          position: document.getElementById('position').value,
+          mode: document.getElementById('mode').value,
+          duration: Number(document.getElementById('duration').value)
+        });
       });
     });
-  });
 
-  // ------------------
-  // PROMISE DEMO
-  // ------------------
+    // PROMISES
 
-  window.testPromiseSuccess = () => {
-    const p = new Promise(res => setTimeout(() => res("Loaded data"), 2000));
+    window.testPromiseSuccess = () => {
+      const p = new Promise(res => setTimeout(() => res("Data loaded"), 2000));
 
-    NotifyIt.promise(p, {
-      loading: "Loading...",
-      success: (r) => `Success: ${r}`
-    });
-  };
+      NotifyIt.promise(p, {
+        loading: "Loading...",
+        success: (r) => `Success: ${r}`
+      });
+    };
 
-  window.testPromiseError = () => {
-    const p = new Promise((_, rej) => setTimeout(() => rej("Fail"), 2000));
+    window.testPromiseError = () => {
+      const p = new Promise((_, rej) => setTimeout(() => rej("Network error"), 2000));
 
-    NotifyIt.promise(p, {
-      loading: "Requesting...",
-      error: (e) => `Error: ${e}`
-    }).catch(()=>{});
-  };
+      NotifyIt.promise(p, {
+        loading: "Requesting...",
+        error: (e) => `Error: ${e}`
+      }).catch(() => { });
+    };
 
-  // stress test
-  window.spam = () => {
-    for (let i = 0; i < 5; i++) {
-      setTimeout(() => {
-        NotifyIt.show({ message: "Toast " + (i + 1) });
-      }, i * 120);
-    }
-  };
-</script>
+    // stress test
+
+    window.spam = () => {
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+          NotifyIt.show({
+            title: "Batch",
+            message: "Toast " + (i + 1)
+          });
+        }, i * 120);
+      }
+    };
+  </script>
 
 </body>
+
 </html>

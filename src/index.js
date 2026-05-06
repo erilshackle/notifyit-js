@@ -3,7 +3,7 @@ import Renderer from './render/renderer.js';
 
 /**
  * @typedef {'success'|'error'|'warning'|'info'|'default'} NotifyType
- * @typedef {'outline'|'subtle'|'elevated'|'solid'|'gradient'|'glass'} NotifyAppearance
+ * @typedef {'solid'|'mono'|'rich'} NotifyMode
  */
 
 /**
@@ -17,7 +17,7 @@ import Renderer from './render/renderer.js';
  * @typedef {Object} NotifyShowOptions
  * @property {string} message
  * @property {NotifyType} [type]
- * @property {NotifyAppearance} [appearance]
+ * @property {NotifyMode} [mode]
  * @property {number} [duration]
  * @property {NotifyAction[]} [actions]
  */
@@ -27,7 +27,7 @@ import Renderer from './render/renderer.js';
  * @property {string} [loading]
  * @property {string|function|{message?: string|function, actions?: NotifyAction[]}} [success]
  * @property {string|function|{message?: string|function, actions?: NotifyAction[]}} [error]
- * @property {NotifyAppearance} [appearance]
+ * @property {NotifyMode} [mode]
  * @property {number} [duration]
  */
 
@@ -56,8 +56,15 @@ function normalizeInput(input) {
 }
 
 function normalizeType(type) {
-  const TYPES = Object.values(NotifyIt.Type);
-  return TYPES.includes(type) ? type : 'default';
+  const TYPES = NotifyIt.Type;
+
+  const values = Object.values(TYPES);
+
+  if (!values.includes(type)) {
+    return TYPES.DEFAULT;
+  }
+
+  return type;
 }
 
 // ------------------------------------------------------------
@@ -68,13 +75,10 @@ const NotifyIt = {
   // CONSTANTS
   // ------------------------------------------------------------
 
-  Appearance: Object.freeze({
-    OUTLINE: 'outline',
-    SUBTLE: 'subtle',
-    ELEVATED: 'elevated',
+  mode: Object.freeze({
+    MONO: 'mono',
     SOLID: 'solid',
-    GRADIENT: 'gradient',
-    GLASS: 'glass'
+    RICH: 'rich',
   }),
 
   Type: Object.freeze({
@@ -165,14 +169,15 @@ const NotifyIt = {
       return;
     }
 
-    const type =
+    const type = normalizeType(
       data.type ||
-      (data.success === false ? 'error' : 'success');
+      (data.success === false ? 'error' : 'success')
+    );
 
     this.show({
       message: data.message || '',
       type,
-      appearance: data.appearance,
+      mode: data.mode,
       duration: data.duration
     });
   },
@@ -191,7 +196,7 @@ const NotifyIt = {
     if (message) {
       this.show({
         message,
-        type: type || 'default'
+        type: normalizeType(type || 'default')
       });
       return;
     }
@@ -216,14 +221,13 @@ const NotifyIt = {
     const loading = this.show({
       message: options.loading || 'Loading...',
       type: 'info',
-      appearance: options.appearance,
+      mode: options.mode,
       duration: 0
     });
 
     return promise
       .then((result) => {
-        // setTimeout(() => 
-          remove(loading.toast.id);
+        remove(loading.toast.id);
 
         const msg =
           typeof options.success === 'object'
@@ -236,7 +240,7 @@ const NotifyIt = {
               ? msg(result)
               : msg || 'Success',
           type: 'success',
-          appearance: options.appearance,
+          mode: options.mode,
           duration: options.duration,
           actions:
             typeof options.success === 'object'
@@ -247,7 +251,7 @@ const NotifyIt = {
         return result;
       })
       .catch((error) => {
-        setTimeout(() => remove(loading.toast.id), 300);
+        remove(loading.toast.id);
 
         const msg =
           typeof options.error === 'object'
@@ -260,7 +264,7 @@ const NotifyIt = {
               ? msg(error)
               : msg || 'Error',
           type: 'error',
-          appearance: options.appearance,
+          mode: options.mode,
           duration: options.duration,
           actions:
             typeof options.error === 'object'
