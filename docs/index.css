@@ -1,0 +1,262 @@
+/* src/ui/style.css */
+:root {
+  --notify-bg: #ffffff;
+  --notify-text: #111827;
+  --notify-border: #e5e7eb;
+  --notify-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
+  --notify-success: #10b981;
+  --notify-error: #ef4444;
+  --notify-warning: #f59e0b;
+  --notify-info: #3b82f6;
+}
+.notify-container {
+  position: fixed;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 420px;
+  padding: 12px;
+  pointer-events: none;
+}
+.notify {
+  pointer-events: auto;
+  color: var(--notify-text);
+}
+.notify-top-right {
+  top: 0;
+  right: 0;
+}
+.notify-top-left {
+  top: 0;
+  left: 0;
+}
+.notify-bottom-right {
+  bottom: 0;
+  right: 0;
+}
+.notify-bottom-left {
+  bottom: 0;
+  left: 0;
+}
+.notify-top-center,
+.notify-bottom-center {
+  left: 50%;
+  transform: translateX(-50%);
+  align-items: center;
+}
+.notify-top-center {
+  top: 0;
+}
+.notify-bottom-center {
+  bottom: 0;
+}
+.notify {
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas: "icon main close";
+  gap: 10px;
+  min-width: 260px;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
+}
+.notify-icon {
+  grid-area: icon;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+  color: inherit;
+}
+.notify-icon svg {
+  width: 18px;
+  height: 18px;
+  color: inherit;
+}
+.notify-main {
+  grid-area: main;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.notify-title {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: inherit;
+}
+.notify-message {
+  font-size: 13px;
+  line-height: 1.4;
+  opacity: 0.85;
+  color: inherit;
+}
+.notify-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+.notify-action {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid currentColor;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: 0.15s ease;
+  color: inherit;
+}
+.notify-action:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.06);
+}
+.notify-close {
+  grid-area: close;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  opacity: 0.5;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+.notify-close:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.08);
+}
+.notify--solid {
+  color: #fff;
+  border: none;
+}
+.notify--solid.notify-success {
+  background: var(--notify-success);
+}
+.notify--solid.notify-error {
+  background: var(--notify-error);
+}
+.notify--solid.notify-warning {
+  background: var(--notify-warning);
+}
+.notify--solid.notify-info {
+  background: var(--notify-info);
+}
+.notify--solid .notify-action {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+.notify--solid .notify-close {
+  color: #fff;
+}
+.notify--mono {
+  background: var(--notify-bg);
+  color: var(--notify-text);
+  border: 1px solid var(--notify-border);
+}
+.notify--mono.notify-success {
+}
+.notify--mono.notify-error {
+}
+.notify--mono.notify-warning {
+}
+.notify--mono.notify-info {
+}
+.notify--mono .notify-icon {
+  opacity: 0.85;
+}
+.notify--rich {
+  border: 1px solid transparent;
+  background: color-mix(in srgb, var(--notify-bg) 85%, transparent);
+}
+.notify--rich.notify-success {
+  background: color-mix(in srgb, var(--notify-success) 14%, var(--notify-bg));
+  color: color-mix(in srgb, var(--notify-success) 85%, #000);
+  border-color: color-mix(in srgb, var(--notify-success) 25%, transparent);
+}
+.notify--rich.notify-error {
+  background: color-mix(in srgb, var(--notify-error) 14%, var(--notify-bg));
+  color: color-mix(in srgb, var(--notify-error) 85%, #000);
+  border-color: color-mix(in srgb, var(--notify-error) 25%, transparent);
+}
+.notify--rich.notify-warning {
+  background: color-mix(in srgb, var(--notify-warning) 14%, var(--notify-bg));
+  color: color-mix(in srgb, var(--notify-warning) 85%, #000);
+  border-color: color-mix(in srgb, var(--notify-warning) 25%, transparent);
+}
+.notify--rich.notify-info {
+  background: color-mix(in srgb, var(--notify-info) 14%, var(--notify-bg));
+  color: color-mix(in srgb, var(--notify-info) 85%, #000);
+  border-color: color-mix(in srgb, var(--notify-info) 25%, transparent);
+}
+.notify--rich .notify-icon svg {
+  color: currentColor;
+  opacity: 0.95;
+}
+.notify--rich .notify-action {
+  border-color: currentColor;
+  color: currentColor;
+  opacity: 0.85;
+}
+.notify--rich .notify-action:hover {
+  opacity: 1;
+  background: color-mix(in srgb, currentColor 10%, transparent);
+}
+.notify--rich .notify-close {
+  color: currentColor;
+  opacity: 0.6;
+}
+.notify--rich .notify-close:hover {
+  opacity: 1;
+  background: color-mix(in srgb, currentColor 10%, transparent);
+}
+.notify-enter {
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+}
+.notify-enter-active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition: all 0.25s ease;
+}
+.notify-leave-active {
+  opacity: 0;
+  transform: scale(0.96);
+  transition: all 0.2s ease;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --notify-bg: #1f2933;
+    --notify-text: #f9fafb;
+    --notify-border: #374151;
+  }
+  .notify--rich.notify-success {
+    color: #6ee7b7;
+  }
+  .notify--rich.notify-error {
+    color: #fca5a5;
+  }
+  .notify--rich.notify-warning {
+    color: #fcd34d;
+  }
+  .notify--rich.notify-info {
+    color: #93c5fd;
+  }
+}
+/*# sourceMappingURL=index.css.map */

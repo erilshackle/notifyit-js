@@ -87,6 +87,8 @@
     gap: 10px;
 
     min-width: 260px;
+
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
 /* ------------------------------------------------------------------
@@ -248,22 +250,22 @@
 
 /* opcional: leve indicação por cor só na borda esquerda */
 .notify--mono.notify-success {
-    border-left: 4px solid var(--notify-success);
+    /* border-left: 4px solid var(--notify-success); */
     /* border-right: 4px solid var(--notify-success); */
 }
 
 .notify--mono.notify-error {
-    border-left: 4px solid var(--notify-error);
+    /* border-left: 4px solid var(--notify-error); */
     /* border-right: 4px solid var(--notify-error); */
 }
 
 .notify--mono.notify-warning {
-    border-left: 4px solid var(--notify-warning);
+    /* border-left: 4px solid var(--notify-warning); */
     /* border-right: 4px solid var(--notify-warning); */
 }
 
 .notify--mono.notify-info {
-    border-left: 4px solid var(--notify-info);
+    /* border-left: 4px solid var(--notify-info); */
     /* border-right: 4px solid var(--notify-info); */
 }
 

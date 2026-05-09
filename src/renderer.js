@@ -3,9 +3,9 @@ import {
   remove,
   pauseTimer,
   resumeTimer
-} from './../core.js';
+} from './core.js';
 
-import defaultLayout from '../layouts/template.js';
+import defaultLayout from './ui/template.js';
 
 const layouts = {
   default: defaultLayout

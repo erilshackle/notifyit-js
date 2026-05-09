@@ -1,5 +1,6 @@
 import { state, show, remove, clear } from './core.js';
-import Renderer from './render/renderer.js';
+import Renderer from './renderer.js';
+import './ui/style.css';
 
 /**
  * @typedef {'success'|'error'|'warning'|'info'|'default'} NotifyType
@@ -50,7 +51,7 @@ function mount() {
 
 function normalizeInput(input) {
   if (typeof input === 'string') {
-    return { message: input };
+    return { message: input, type: Type.DEFAULT };
   }
   return input || {};
 }
@@ -113,6 +114,18 @@ const NotifyIt = {
    * @param {string|NotifyShowOptions} options
    */
   show(options) {
+    const opts = normalizeInput(options);
+
+    return show({
+      ...opts,
+      type: normalizeType(opts.type)
+    });
+  },
+
+  /**
+   * @param {string|NotifyShowOptions} options
+   */
+  toast(options) {
     const opts = normalizeInput(options);
 
     return show({
@@ -284,5 +297,3 @@ const NotifyIt = {
 if (typeof window !== 'undefined') {
   window.NotifyIt = NotifyIt;
 }
-
-export default NotifyIt;
