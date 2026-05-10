@@ -7,7 +7,7 @@ export const state = {
     max: 5,
     closable: true,
     pauseOnHover: true,
-    mode: 'solid',
+    mode: 'mono',
     layout: 'default',
     icon: true
   },

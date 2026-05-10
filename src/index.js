@@ -4,7 +4,7 @@ import './ui/style.css';
 
 /**
  * @typedef {'success'|'error'|'warning'|'info'|'default'} NotifyType
- * @typedef {'solid'|'mono'|'rich'} NotifyMode
+ * @typedef {'solid'|'mono'|'soft'} NotifyMode
  */
 
 /**
@@ -79,7 +79,7 @@ const NotifyIt = {
   mode: Object.freeze({
     MONO: 'mono',
     SOLID: 'solid',
-    RICH: 'rich',
+    SOFT: 'soft',
   }),
 
   Type: Object.freeze({
@@ -91,10 +91,11 @@ const NotifyIt = {
   }),
 
   Position: Object.freeze({
+    TOP: 'bottom-center',
     TOP_RIGHT: 'top-right',
     TOP_LEFT: 'top-left',
     BOTTOM_RIGHT: 'bottom-right',
-    BOTTOM_LEFT: 'bottom-left'
+    BOTTOM: 'bottom-center'
   }),
 
   // ------------------------------------------------------------

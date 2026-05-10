@@ -1,397 +1,671 @@
-/* ------------------------------------------------------------------
- * VARIABLES
- * ------------------------------------------------------------------ */
-
+/* src/ui/style.css */
 :root {
-    --notify-bg: #ffffff;
-    --notify-text: #111827;
-    --notify-border: #e5e7eb;
-    --notify-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
-        0 4px 6px -2px rgb(0 0 0 / 0.05);
+  --notify-bg: #ffffff;
+  --notify-text: #111827;
+  --notify-border: #e5e7eb;
 
-    --notify-success: #10b981;
-    --notify-error: #ef4444;
-    --notify-warning: #f59e0b;
-    --notify-info: #3b82f6;
+  --notify-shadow:
+    0 10px 30px -12px rgb(0 0 0 / 0.22),
+    0 8px 16px -8px rgb(0 0 0 / 0.14);
+
+  --notify-success: #10b981;
+  --notify-error: #ef4444;
+  --notify-warning: #f59e0b;
+  --notify-info: #3b82f6;
 }
 
-/* ------------------------------------------------------------------
- * CONTAINER
- * ------------------------------------------------------------------ */
-
 .notify-container {
-    position: fixed;
-    z-index: 9999;
-
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-
-    max-width: 420px;
-    padding: 12px;
-
-    pointer-events: none;
+  position: fixed;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 420px;
+  padding: 16px;
+  pointer-events: none;
 }
 
 .notify {
-    pointer-events: auto;
-    color: var(--notify-text);
+  pointer-events: auto;
+  color: var(--notify-text);
+
+  position: relative;
+  overflow: hidden;
+
+  border-radius: 16px;
+  padding: 14px 15px;
+
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas: "icon main close";
+  gap: 12px;
+
+  min-width: 280px;
+
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  box-shadow: var(--notify-shadow);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.notify:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 18px 38px -16px rgb(0 0 0 / 0.28),
+    0 10px 18px -10px rgb(0 0 0 / 0.18);
+}
+
+.notify::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.08),
+      transparent 42%
+    );
+
+  opacity: 0.8;
 }
 
 .notify-top-right {
-    top: 0;
-    right: 0;
+  top: 0;
+  right: 0;
 }
 
 .notify-top-left {
-    top: 0;
-    left: 0;
+  top: 0;
+  left: 0;
 }
 
 .notify-bottom-right {
-    bottom: 0;
-    right: 0;
+  bottom: 0;
+  right: 0;
 }
 
 .notify-bottom-left {
-    bottom: 0;
-    left: 0;
+  bottom: 0;
+  left: 0;
 }
 
 .notify-top-center,
 .notify-bottom-center {
-    left: 50%;
-    transform: translateX(-50%);
-    align-items: center;
+  left: 50%;
+  transform: translateX(-50%);
+  align-items: center;
 }
 
 .notify-top-center {
-    top: 0;
+  top: 0;
 }
 
 .notify-bottom-center {
-    bottom: 0;
+  bottom: 0;
 }
-
-/* ------------------------------------------------------------------
- * BASE
- * ------------------------------------------------------------------ */
-
-.notify {
-    border-radius: 10px;
-    padding: 12px 14px;
-
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    grid-template-areas: "icon main close";
-    gap: 10px;
-
-    min-width: 260px;
-
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-}
-
-/* ------------------------------------------------------------------
- * ICON
- * ------------------------------------------------------------------ */
 
 .notify-icon {
-    grid-area: icon;
-    width: 20px;
-    height: 20px;
+  grid-area: icon;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 22px;
+  height: 22px;
 
-    margin-top: 2px;
-    color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 1px;
+  color: inherit;
+
+  flex-shrink: 0;
 }
 
 .notify-icon svg {
-    width: 18px;
-    height: 18px;
-    color: inherit;
+  width: 18px;
+  height: 18px;
+  color: inherit;
+
+  filter: drop-shadow(0 2px 6px rgb(0 0 0 / 0.12));
 }
 
-/* ------------------------------------------------------------------
- * MAIN
- * ------------------------------------------------------------------ */
-
 .notify-main {
-    grid-area: main;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    min-width: 0;
+  grid-area: main;
+
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  min-width: 0;
 }
 
 .notify-title {
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 1.3;
-    color: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: inherit;
 }
 
 .notify-message {
-    font-size: 13px;
-    line-height: 1.4;
-    opacity: 0.85;
-    color: inherit;
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.82;
+  color: inherit;
 }
 
-/* ------------------------------------------------------------------
- * ACTIONS
- * ------------------------------------------------------------------ */
-
 .notify-actions {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-top: 6px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
 }
 
 .notify-action {
-    font-size: 12px;
-    padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 600;
 
-    border-radius: 6px;
-    border: 1px solid currentColor;
+  padding: 6px 10px;
 
-    background: transparent;
-    cursor: pointer;
+  border-radius: 9px;
+  border: 1px solid currentColor;
 
-    opacity: 0.85;
-    transition: 0.15s ease;
+  background: rgb(255 255 255 / 0.06);
 
-    color: inherit;
+  cursor: pointer;
+
+  opacity: 0.9;
+
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+  color: inherit;
 }
 
 .notify-action:hover {
-    opacity: 1;
-    background: rgba(0, 0, 0, 0.06);
+  opacity: 1;
+  transform: translateY(-1px);
+  background: rgb(0 0 0 / 0.06);
 }
 
-/* ------------------------------------------------------------------
- * CLOSE
- * ------------------------------------------------------------------ */
+.notify-action:active {
+  transform: scale(0.98);
+}
 
 .notify-close {
-    grid-area: close;
+  grid-area: close;
 
-    width: 22px;
-    height: 22px;
+  width: 24px;
+  height: 24px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    border-radius: 6px;
-    border: none;
+  border-radius: 8px;
+  border: none;
 
-    background: transparent;
-    color: inherit;
+  background: transparent;
 
-    opacity: 0.5;
-    cursor: pointer;
+  color: inherit;
+  opacity: 0.55;
 
-    transition: 0.15s ease;
+  cursor: pointer;
+
+  transition:
+    opacity 0.15s ease,
+    background 0.15s ease,
+    transform 0.15s ease;
 }
 
 .notify-close:hover {
-    opacity: 1;
-    background: rgba(0, 0, 0, 0.08);
+  opacity: 1;
+  transform: rotate(90deg);
+  background: rgb(0 0 0 / 0.08);
 }
 
-/* ================================================================
- * MODE: SOLID (DEFAULT)
- * ================================================================ */
+.notify-close:active {
+  transform: scale(0.92);
+}
+
+/* SOLID */
 
 .notify--solid {
-    color: #fff;
-    border: none;
+  color: #fff;
+  border: none;
 }
 
 .notify--solid.notify-success {
-    background: var(--notify-success);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--notify-success) 92%, white),
+      var(--notify-success)
+    );
 }
 
 .notify--solid.notify-error {
-    background: var(--notify-error);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--notify-error) 92%, white),
+      var(--notify-error)
+    );
 }
 
 .notify--solid.notify-warning {
-    background: var(--notify-warning);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--notify-warning) 92%, white),
+      var(--notify-warning)
+    );
 }
 
 .notify--solid.notify-info {
-    background: var(--notify-info);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--notify-info) 92%, white),
+      var(--notify-info)
+    );
 }
 
 .notify--solid .notify-action {
-    border-color: rgba(255, 255, 255, 0.3);
-    color: #fff;
+  border-color: rgb(255 255 255 / 0.25);
+  background: rgb(255 255 255 / 0.08);
+  color: #fff;
+}
+
+.notify--solid .notify-action:hover {
+  background: rgb(255 255 255 / 0.14);
 }
 
 .notify--solid .notify-close {
-    color: #fff;
+  color: #fff;
 }
 
-/* ================================================================
- * MODE: MONO (clean / neutral)
- * ================================================================ */
+/* MONO */
 
 .notify--mono {
-    background: var(--notify-bg);
-    color: var(--notify-text);
-    border: 1px solid var(--notify-border);
-    /* border-radius: 8px 0 6px ; */
+  background: var(--notify-bg);
+  color: var(--notify-text);
+
+  border: none;
+
+  box-shadow:
+    0 10px 24px -18px rgb(0 0 0 / 0.18),
+    0 2px 8px rgb(0 0 0 / 0.04);
 }
 
-/* opcional: leve indicação por cor só na borda esquerda */
-.notify--mono.notify-success {
-    /* border-left: 4px solid var(--notify-success); */
-    /* border-right: 4px solid var(--notify-success); */
-}
-
-.notify--mono.notify-error {
-    /* border-left: 4px solid var(--notify-error); */
-    /* border-right: 4px solid var(--notify-error); */
-}
-
-.notify--mono.notify-warning {
-    /* border-left: 4px solid var(--notify-warning); */
-    /* border-right: 4px solid var(--notify-warning); */
-}
-
+.notify--mono.notify-success,
+.notify--mono.notify-error,
+.notify--mono.notify-warning,
 .notify--mono.notify-info {
-    /* border-left: 4px solid var(--notify-info); */
-    /* border-right: 4px solid var(--notify-info); */
+  background: var(--notify-bg);
+  color: var(--notify-text);
 }
 
-/* ícone discreto */
 .notify--mono .notify-icon {
-    opacity: 0.85;
+  opacity: 0.72;
 }
 
-/* ================================================================
- * MODE: RICH (modern tinted surface system)
- * ================================================================ */
-
-.notify--rich {
-    border: 1px solid transparent;
-    background: color-mix(in srgb, var(--notify-bg) 85%, transparent);
+.notify--mono .notify-action {
+  border-color: rgb(0 0 0 / 0.08);
 }
 
-/* SUCCESS **/
-
-.notify--rich.notify-success {
-    background: color-mix(in srgb, var(--notify-success) 14%, var(--notify-bg));
-    color: color-mix(in srgb, var(--notify-success) 85%, #000);
-    border-color: color-mix(in srgb, var(--notify-success) 25%, transparent);
+.notify--mono .notify-action:hover {
+  background: rgb(0 0 0 / 0.05);
 }
 
-/* ERROR **/
-
-.notify--rich.notify-error {
-    background: color-mix(in srgb, var(--notify-error) 14%, var(--notify-bg));
-    color: color-mix(in srgb, var(--notify-error) 85%, #000);
-    border-color: color-mix(in srgb, var(--notify-error) 25%, transparent);
+.notify--mono .notify-close:hover {
+  background: rgb(0 0 0 / 0.05);
 }
 
-/* WARNING **/
+/* SOFT (ex-rich) */
 
-.notify--rich.notify-warning {
-    background: color-mix(in srgb, var(--notify-warning) 14%, var(--notify-bg));
-    color: color-mix(in srgb, var(--notify-warning) 85%, #000);
-    border-color: color-mix(in srgb, var(--notify-warning) 25%, transparent);
+.notify--soft {
+  border: 1px solid transparent;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.08),
+      transparent
+    ),
+    color-mix(in srgb, var(--notify-bg) 88%, transparent);
 }
 
-/* INFO **/
+.notify--soft.notify-success {
+  background:
+    linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.12),
+      transparent
+    ),
+    color-mix(in srgb, var(--notify-success) 14%, var(--notify-bg));
 
-.notify--rich.notify-info {
-    background: color-mix(in srgb, var(--notify-info) 14%, var(--notify-bg));
-    color: color-mix(in srgb, var(--notify-info) 85%, #000);
-    border-color: color-mix(in srgb, var(--notify-info) 25%, transparent);
+  color: color-mix(in srgb, var(--notify-success) 85%, #000);
+
+  border-color:
+    color-mix(in srgb, var(--notify-success) 24%, transparent);
 }
 
-/* ICONS (fix importante) **/
+.notify--soft.notify-error {
+  background:
+    linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.12),
+      transparent
+    ),
+    color-mix(in srgb, var(--notify-error) 14%, var(--notify-bg));
 
-.notify--rich .notify-icon svg {
-    color: currentColor;
-    opacity: 0.95;
+  color: color-mix(in srgb, var(--notify-error) 85%, #000);
+
+  border-color:
+    color-mix(in srgb, var(--notify-error) 24%, transparent);
 }
 
-/* ACTIONS **/
+.notify--soft.notify-warning {
+  background:
+    linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.12),
+      transparent
+    ),
+    color-mix(in srgb, var(--notify-warning) 14%, var(--notify-bg));
 
-.notify--rich .notify-action {
-    border-color: currentColor;
-    color: currentColor;
-    opacity: 0.85;
+  color: color-mix(in srgb, var(--notify-warning) 85%, #000);
+
+  border-color:
+    color-mix(in srgb, var(--notify-warning) 24%, transparent);
 }
 
-.notify--rich .notify-action:hover {
-    opacity: 1;
-    background: color-mix(in srgb, currentColor 10%, transparent);
+.notify--soft.notify-info {
+  background:
+    linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.12),
+      transparent
+    ),
+    color-mix(in srgb, var(--notify-info) 14%, var(--notify-bg));
+
+  color: color-mix(in srgb, var(--notify-info) 85%, #000);
+
+  border-color:
+    color-mix(in srgb, var(--notify-info) 24%, transparent);
 }
 
-/* CLOSE **/
-
-.notify--rich .notify-close {
-    color: currentColor;
-    opacity: 0.6;
+.notify--soft .notify-icon svg {
+  color: currentColor;
+  opacity: 0.96;
 }
 
-.notify--rich .notify-close:hover {
-    opacity: 1;
-    background: color-mix(in srgb, currentColor 10%, transparent);
+.notify--soft .notify-action {
+  border-color: currentColor;
+  color: currentColor;
+  opacity: 0.9;
 }
 
-/* ================================================================
- * ANIMATIONS
- * ================================================================ */
+.notify--soft .notify-action:hover {
+  opacity: 1;
+  background:
+    color-mix(in srgb, currentColor 10%, transparent);
+}
+
+.notify--soft .notify-close {
+  color: currentColor;
+  opacity: 0.65;
+}
+
+.notify--soft .notify-close:hover {
+  opacity: 1;
+
+  background:
+    color-mix(in srgb, currentColor 10%, transparent);
+}
+
+/* DARK MODE */
+
+@media (prefers-color-scheme: dark) {
+  .notify--mono {
+    background:
+      linear-gradient(
+        180deg,
+        rgb(255 255 255 / 0.02),
+        transparent
+      ),
+      var(--notify-bg);
+  }
+
+  .notify--mono .notify-action {
+    border-color: rgb(255 255 255 / 0.08);
+  }
+
+  .notify--mono .notify-action:hover,
+  .notify--mono .notify-close:hover {
+    background: rgb(255 255 255 / 0.06);
+  }
+
+  .notify--soft.notify-success {
+    color: #6ee7b7;
+  }
+
+  .notify--soft.notify-error {
+    color: #fca5a5;
+  }
+
+  .notify--soft.notify-warning {
+    color: #fcd34d;
+  }
+
+  .notify--soft.notify-info {
+    color: #93c5fd;
+  }
+}
+
+.notify--mono .notify-icon {
+  opacity: 0.9;
+}
+
+/* RICH */
+
+.notify--soft {
+  border: 1px solid transparent;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.08),
+      transparent
+    ),
+    color-mix(in srgb, var(--notify-bg) 88%, transparent);
+}
+
+.notify--soft.notify-success {
+  background:
+    linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.12),
+      transparent
+    ),
+    color-mix(in srgb, var(--notify-success) 14%, var(--notify-bg));
+
+  color: color-mix(in srgb, var(--notify-success) 85%, #000);
+
+  border-color:
+    color-mix(in srgb, var(--notify-success) 24%, transparent);
+}
+
+.notify--soft.notify-error {
+  background:
+    linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.12),
+      transparent
+    ),
+    color-mix(in srgb, var(--notify-error) 14%, var(--notify-bg));
+
+  color: color-mix(in srgb, var(--notify-error) 85%, #000);
+
+  border-color:
+    color-mix(in srgb, var(--notify-error) 24%, transparent);
+}
+
+.notify--soft.notify-warning {
+  background:
+    linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.12),
+      transparent
+    ),
+    color-mix(in srgb, var(--notify-warning) 14%, var(--notify-bg));
+
+  color: color-mix(in srgb, var(--notify-warning) 85%, #000);
+
+  border-color:
+    color-mix(in srgb, var(--notify-warning) 24%, transparent);
+}
+
+.notify--soft.notify-info {
+  background:
+    linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.12),
+      transparent
+    ),
+    color-mix(in srgb, var(--notify-info) 14%, var(--notify-bg));
+
+  color: color-mix(in srgb, var(--notify-info) 85%, #000);
+
+  border-color:
+    color-mix(in srgb, var(--notify-info) 24%, transparent);
+}
+
+.notify--soft .notify-icon svg {
+  color: currentColor;
+  opacity: 0.96;
+}
+
+.notify--soft .notify-action {
+  border-color: currentColor;
+  color: currentColor;
+  opacity: 0.9;
+}
+
+.notify--soft .notify-action:hover {
+  opacity: 1;
+  background:
+    color-mix(in srgb, currentColor 10%, transparent);
+}
+
+.notify--soft .notify-close {
+  color: currentColor;
+  opacity: 0.65;
+}
+
+.notify--soft .notify-close:hover {
+  opacity: 1;
+
+  background:
+    color-mix(in srgb, currentColor 10%, transparent);
+}
+
+/* ANIMATIONS */
 
 .notify-enter {
-    opacity: 0;
-    transform: translateY(8px) scale(0.98);
+  opacity: 0;
+  transform: translateY(12px) scale(0.96);
 }
 
 .notify-enter-active {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    transition: all 0.25s ease;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+
+  transition:
+    opacity 0.28s ease,
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .notify-leave-active {
-    opacity: 0;
-    transform: scale(0.96);
-    transition: all 0.2s ease;
+  opacity: 0;
+  transform: translateY(-6px) scale(0.94);
+
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
 }
 
-/* ================================================================
- * DARK MODE FIX
- * ================================================================ */
+/* DARK MODE */
 
 @media (prefers-color-scheme: dark) {
-    :root {
-        --notify-bg: #1f2933;
-        --notify-text: #f9fafb;
-        --notify-border: #374151;
-    }
+  :root {
+    --notify-bg: #111827;
+    --notify-text: #f9fafb;
+    --notify-border: #2a3647;
 
-    .notify--rich.notify-success {
-        color: #6ee7b7;
-    }
+    --notify-shadow:
+      0 16px 34px -18px rgb(0 0 0 / 0.7),
+      0 10px 16px -10px rgb(0 0 0 / 0.45);
+  }
 
-    .notify--rich.notify-error {
-        color: #fca5a5;
-    }
+  .notify::before {
+    background:
+      linear-gradient(
+        180deg,
+        rgb(255 255 255 / 0.04),
+        transparent 45%
+      );
+  }
 
-    .notify--rich.notify-warning {
-        color: #fcd34d;
-    }
+  .notify--mono {
+    background:
+      linear-gradient(
+        180deg,
+        rgb(255 255 255 / 0.02),
+        transparent
+      ),
+      var(--notify-bg);
 
-    .notify--rich.notify-info {
-        color: #93c5fd;
-    }
+    border-color: var(--notify-border);
+  }
+
+  .notify-action:hover,
+  .notify-close:hover {
+    background: rgb(255 255 255 / 0.06);
+  }
+
+  .notify--soft.notify-success {
+    color: #6ee7b7;
+  }
+
+  .notify--soft.notify-error {
+    color: #fca5a5;
+  }
+
+  .notify--soft.notify-warning {
+    color: #fcd34d;
+  }
+
+  .notify--soft.notify-info {
+    color: #93c5fd;
+  }
 }

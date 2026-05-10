@@ -1,4 +1,4 @@
-import icons from './icons.min.js';
+import icons from './icons.js';
 
 export default function defaultLayout(t, config) {
 
